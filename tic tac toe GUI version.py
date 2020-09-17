@@ -91,8 +91,6 @@ def findbestmove():
     return place
 
 
-    
-    
 
 def draw_grid():
     win.fill(WHITE)
@@ -212,7 +210,7 @@ while run:
         if event.type==pygame.QUIT:
             run=False
         if full():
-            draw_status("Kareddy")
+            draw_status("Player")
             reset_game()
             #print("tie")
         elif winner('X',grid):
@@ -226,16 +224,16 @@ while run:
             if event.type is MOUSEBUTTONDOWN:
                 x,y=user_click()
                 if x!=0 and x!=-1:
-                    draw_status("Kareddy")
+                    draw_status("Player")
                     pos=(x-1)*3+y
                     grid[pos]='X'
-                    draw_status("Kareddy")
+                    draw_status("Player")
                     if not full():
                         move=findbestmove()
                         grid[move]='O'
                         #print(move)
                         row,col=move_dic[move]
-                        draw_status("Kareddy")
+                        draw_status("Player")
                         drawXO(row, col,'O')
                 elif x==0:
                     draw_status("Already Selected")
