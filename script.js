@@ -6,6 +6,7 @@ const cells = document.querySelectorAll(".cell")
 var n=0
 startGame()
 
+
 function Game(){
 	if (n%2==0){
 		startGame()
@@ -21,7 +22,7 @@ function startGame2(){
 	for(var i=0;i<cells.length;i++){
 		cells[i].innerText = ''
 		cells[i].style.removeProperty('background-color')
-		cells[i].addEventListener('click',turnClick,false)
+		cells[i].addEventListener('click',turnClick2,false)
 	}
 	turn(bestSpot(),aiplayer)
 }
@@ -32,7 +33,7 @@ function startGame(){
     for(var i=0;i<cells.length;i++){
         cells[i].innerText = ''
         cells[i].style.removeProperty('background-color')
-        cells[i].addEventListener('click',turnClick2,false)
+        cells[i].addEventListener('click',turnClick,false)
     }
 }
 
@@ -87,7 +88,12 @@ function gameOver(gameWon){
         document.getElementById(index).style.backgroundColor = gameWon.player==huplayer?"blue":"red"
     }
     for(var i=0;i<cells.length;i++){
-        cells[i].removeEventListener('click',turnClick,false)
+		if(n%2==0){
+			cells[i].removeEventListener('click',turnClick,false)
+		}
+		else{
+			cells[i].removeEventListener('click',turnClick2,false)
+		}
 	}
 	n+=1
     declareWinner(gameWon.player==huplayer?"You Won!":"You lost!")
@@ -110,8 +116,13 @@ function checkTie(){
     gameWon = checkWin(origBoard,huplayer)
     if (emptySquares().length==0 && !gameWon){
         for(var i=0;i<cells.length;i++){
-            cells[i].style.backgroundColor="green"
-            cells[i].removeEventListener('click',turnClick,false)
+			cells[i].style.backgroundColor="green"
+			if(n%2==0){
+				cells[i].removeEventListener('click',turnClick,false)
+			}
+			else{
+				cells[i].removeEventListener('click',turnClick2,false)
+			}
         }
 		declareWinner("Tie Game")
 		n+=1
