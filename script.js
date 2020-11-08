@@ -3,7 +3,28 @@ const huplayer ='O'
 const aiplayer = 'X'
 const winCombo = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[6,4,2],[0,4,8]]
 const cells = document.querySelectorAll(".cell")
+var n=0
 startGame()
+
+function Game(){
+	if (n%2==0){
+		startGame()
+	}
+	else{
+		startGame2()
+	}
+}
+
+function startGame2(){
+	document.querySelector(".endgame").style.display="none"
+	origBoard = Array.from(Array(9).keys())
+	for(var i=0;i<cells.length;i++){
+		cells[i].innerText = ''
+		cells[i].style.removeProperty('background-color')
+		cells[i].addEventListener('click',turnClick,false)
+	}
+	turn(bestSpot(),aiplayer)
+}
 
 function startGame(){
     document.querySelector(".endgame").style.display="none"
@@ -11,25 +32,39 @@ function startGame(){
     for(var i=0;i<cells.length;i++){
         cells[i].innerText = ''
         cells[i].style.removeProperty('background-color')
-        cells[i].addEventListener('click',turnClick,false)
+        cells[i].addEventListener('click',turnClick2,false)
     }
+}
+
+function turnClick2(square){
+	gameWon = checkWin(origBoard,aiplayer)
+	s= checkTie()
+	if (typeof origBoard[square.target.id]=='number' && !checkTie() && !gameWon){
+		turn(square.target.id,huplayer)
+		gameWon = checkWin(origBoard,huplayer)
+		if(!checkTie() && !gameWon){
+			turn(bestSpot(),aiplayer)
+			s=checkTie()
+		}
+	}
 }
 
 function turnClick(square){
-    if (typeof origBoard[square.target.id]=='number'){
-        turn(square.target.id,huplayer)
-        gameWon = checkWin(origBoard,huplayer)
-        if(!checkTie() && !gameWon){
-            turn(bestSpot(),aiplayer)
-        }
-    }
+	if (typeof origBoard[square.target.id]=='number'){
+		turn(square.target.id,huplayer)
+		gameWon = checkWin(origBoard,huplayer)
+		if(!checkTie() && !gameWon){
+			turn(bestSpot(),aiplayer)
+		}
+	}
 }
+
+
 
 function turn(squareId,player){
     origBoard[squareId] = player
-    let gameWon = checkWin(origBoard,player)
     document.getElementById(squareId).innerText=player
-    gameWon = checkWin(origBoard,player)
+    let gameWon = checkWin(origBoard,player)
     if (gameWon){
         gameOver(gameWon)
     }
@@ -53,7 +88,8 @@ function gameOver(gameWon){
     }
     for(var i=0;i<cells.length;i++){
         cells[i].removeEventListener('click',turnClick,false)
-    }
+	}
+	n+=1
     declareWinner(gameWon.player==huplayer?"You Won!":"You lost!")
 }
 
@@ -77,7 +113,8 @@ function checkTie(){
             cells[i].style.backgroundColor="green"
             cells[i].removeEventListener('click',turnClick,false)
         }
-        declareWinner("Tie Game")
+		declareWinner("Tie Game")
+		n+=1
         return true
     }
     return false
